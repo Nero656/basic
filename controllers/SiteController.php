@@ -24,20 +24,19 @@ class SiteController extends Controller
         {
             switch ($ageCH)
             {
-                case 1: $res = "Вам ".$age." год"." mr.".$name; break;
-                case 2: $res = "Вам ".$age." лет"." mr.".$name;break;
+                case 0: $res = "Вам ".$age." years "." mr.".$name; break;
+                case 1: $res = "Вам ".$age." years "." mr.".$name; break;
             }
         }
         else
         {
             switch ($ageCH)
             {
-                case 1: $res = "Вам ".$age." год"." mr.".$name; break;
-                case 2: $res = "Вам ".$age." лет"." mr.".$name; break;
+                case 0: $res = "Вам ".$age." год"." ms.".$name; break;
+                case 1: $res = "Вам ".$age." years"." ms.".$name; break;
             }
         }
-
-        return $this->render('berthday', ['res' => $res]);
+        return $this->render('Birthday', ['res' => $res]);
     }
     /**
      * {@inheritdoc}
