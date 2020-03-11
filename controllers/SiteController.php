@@ -9,9 +9,36 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\EntryForm;
 
 class SiteController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function actionEntry()
+    {
+
+        $model = new EntryForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            // данные в $model удачно проверены
+
+            // делаем что-то полезное с $model ...
+
+            return $this->render('entry-confirm', ['model' => $model]);
+
+        } else {
+
+            // либо страница отображается первый раз, либо есть ошибка в данных
+
+            return $this->render('entry', ['model' => $model]);
+
+        }
+
+    }
+
     public function actionSay($message = "Привет")
     {
         return $this->render('say', ['message' => $message]);
@@ -19,28 +46,24 @@ class SiteController extends Controller
 
     public function actionBirthday($name = "", $gender = "", $age = "")
     {
-        $ageCH = (int) $age % 2;
-        if ($gender == "male" || $gender == "мужской")
-        {
-            switch ($ageCH)
-            {
-                case 0: $res = "Вам ".$age." years "." mr.".$name; break;
-                case 1: $res = "Вам ".$age." years "." mr.".$name; break;
-            }
-        }
-        else
-        {
-            switch ($ageCH)
-            {
-                case 0: $res = "Вам ".$age." год"." ms.".$name; break;
-                case 1: $res = "Вам ".$age." years"." ms.".$name; break;
-            }
+
+        switch ($gender) {
+            case 'male':
+                $res = "Вам " . $age . " years " . " mr." . $name;
+                break;
+            case 'мужской':
+                $res = "Вам " . $age . " мр." . $name;
+                break;
+            case 'female':
+                $res = "Вам " . $age . " years " . " ms." . $name;
+                break;
+            case 'девушка':
+                $res = "Вам " . $age . " мс." . $name;
+                break;
         }
         return $this->render('Birthday', ['res' => $res]);
     }
-    /**
-     * {@inheritdoc}
-     */
+
     public function behaviors()
     {
         return [
