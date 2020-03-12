@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\data\Pagination;
 use app\models\Country;
+use app\models\addCountry;
 
 class CountryController extends Controller
 {
@@ -30,24 +31,20 @@ class CountryController extends Controller
 
     }
 
-    public function actionAddCountry()
+    public function actionAdd()
     {
 
-        $model = new Country();
+        $model = new addCountry();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-            // данные в $model удачно проверены
+            $model->save();
 
-            // делаем что-то полезное с $model ...
-
-            return $this->render('entry-confirm', ['model' => $model]);
+            return $this->render('countryConfirm', ['model' => $model]);
 
         } else {
 
-            // либо страница отображается первый раз, либо есть ошибка в данных
-
-            return $this->render('entry', ['model' => $model]);
+            return $this->render('country', ['model' => $model]);
 
         }
 
