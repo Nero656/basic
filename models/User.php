@@ -1,86 +1,64 @@
 <?php
 
-use yii\db\ActiveRecord;
+namespace app\models;
 
+use Yii;
+use yii\base\Exception;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface
-
 {
-
     public static function tableName()
-
     {
-
         return 'user';
-
     }
-
-    /**
-     * Finds an identity by the given ID.
-     *
-     * @param string|int $id the ID to be looked for
-     * @return IdentityInterface|null the identity object that matches the given ID.
-     */
 
     public static function findIdentity($id)
-
     {
-
         return static::findOne($id);
-
     }
-
-    /**
-     * Finds an identity by the given token.
-     *
-     * @param string $token the token to be looked for
-     * @return IdentityInterface|null the identity object that matches the given token.
-     */
 
     public static function findIdentityByAccessToken($token, $type = null)
-
     {
-
-        return static::findOne(['accessToken' => $token]);
-
+        return null;
     }
 
-    /**
-     * @return int|string current user ID
-     */
+    public function getRole()
+    {
+        return $this->role;
+    }
 
     public function getId()
-
     {
-
         return $this->id;
-
     }
-
-    /**
-     * @return string current user auth key
-     */
 
     public function getAuthKey()
-
     {
-
-        return $this->authKey;
-
+        return null;
     }
-
-    /**
-     * @param string $authKey
-     * @return bool if auth key is valid for current user
-     */
 
     public function validateAuthKey($authKey)
-
     {
-
-        return $this->getAuthKey() === $authKey;
-
+        return null;
     }
 
+    public function  findByUsername($username)
+    {
+        return User::findOne(['username' => $username]);
+    }
+
+    public function validatePassword($password)
+    {
+        $password = md5($password);
+        if ($password == $this->password)
+        {
+            try {
+            $hash = Yii::$app->getSecurity()->generatePasswordHash($password);
+        } catch (Exception $e) {}
+            return Yii::$app->security->validatePassword($password, $hash);
+        }
+
+    }
 }
